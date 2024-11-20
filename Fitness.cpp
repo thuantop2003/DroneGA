@@ -158,29 +158,33 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 			
 			//dieu kien Technitian den customer sau drone thi drone se phai + them thoi gian doi
 			if(T[i].timetechnitian>T[i].timedrone){
-				//Neu diem truoc do la diem xuat phat cua drone thi drone chi can xuat phat muon hon 
-				if(id1==1){
-					for(int j=is1;j<Ds1.size();j++){
-						Ds1[j]=T[i].timetechnitian-distance(d[T[i].customer],d[0])/vd;
-						id1=0;
-						continue;
-					}
-					is1++;
-				}
-				if(id2==1){
-					for(int j=is2;j<Ds2.size();j++){
-						Ds2[j]=T[i].timetechnitian-distance(d[T[i].customer],d[0])/vd;
-						id2=0;
-						continue;
-					}
-					is2++;
-				}
 				if(findElementIndex(Dlab1, T[i].customer)!=-1){
 					id1=1;
 				};
 				if(findElementIndex(Dlab2, T[i].customer)!=-1){
 					id2=1;
 				};
+				//Neu diem truoc do la diem xuat phat cua drone thi drone chi can xuat phat muon hon 
+				if(id1==1){
+					float t=T[i].timetechnitian-distance(d[T[i].customer],d[0])/vd-Ds1[is1];
+					for(int j=is1;j<Ds1.size();j++){
+						Df1[j]=Df1[j]+t;
+						Ds1[j]=Ds1[j]+t;
+						id1=0;
+						continue;
+					}
+					is1++;
+				}
+				else if(id2==1){
+					float t=T[i].timetechnitian-distance(d[T[i].customer],d[0])/vd-Ds2[is2];
+					for(int j=is2;j<Ds2.size();j++){
+						Df2[j]=Df2[j]+t;
+						Ds2[j]=Ds2[j]+t;
+						id2=0;
+						continue;
+					}
+					is2++;
+				}
 				
 				//neu khong ta phai cap nhat cac gia tri T[i].timedrone, cac vector Ds1,Ds2,Df1,Df2
 				for(int j=i;j<T.size();j++){
@@ -229,11 +233,6 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 			}
 		}
 	}
-	for(int i=0;i<Ds1.size();i++){
-		cout<<Ds1[i]<<" "<<Df1[i]<<endl;
-	}
-	cout<<endl;
-	
 	//check dieu kien tong thoi gian di cua Technitian
 	for(int i=0;i<NSTT.size();i++){
 		if(NSTT[i]>=n){
@@ -261,13 +260,9 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 			return -2;
 		}
 	}
-	
+	cout<<endl;
 	//tinh fitness
-	int fitness=0;
-	int check[100];
-	for(int i=0;i<=n;i++){
-		check[i]=0;
-	}
+	float fitness=0;
 	int x=0;
 	int lt=0;
 	for(int i=0;i<NSTT.size();i++){
@@ -285,29 +280,30 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 		}
 		for(int j=0;j<Dlab1.size();j++){
 			if(NSTT[i]==Dlab1[j]){
-				for(int j=x;i<i;j++){
+				for(int j=x;j<i;j++){
 					for(int k=0;k<T.size();k++){
 						if(NSTT[i]==T[k].customer){
 							fitness=fitness+Df1[j]-T[k].timetechnitian;
 							break;
 						}
 					}
-					x=i;
-				}	
+				}
+				x=i;	
 			}
+			
 		}
 		for(int j=0;j<Dlab2.size();j++){
 			if(NSTT[i]==Dlab2[j]){
-				for(int j=x;i<i;j++){
+				for(int j=x;j<i;j++){
 					for(int k=0;k<T.size();k++){
 						if(NSTT[i]==T[k].customer){
 							fitness=fitness+Df2[j]-T[k].timetechnitian;
 							break;
 						}
 					}
-					x=i;
 				}	
 			}
+			x=i;
 		}
 	}
 	return fitness;
@@ -317,5 +313,7 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 int main(){
 	input();
 	float x=findFitness({1,2,4,3,5},{1,1,0,0,1,1});
-	cout<<x;
+	cout<<x<<endl;
+	float y=findFitness({1,2,4,3,5},{0,0,0,0,1,1});
+	cout<<y;
 }
