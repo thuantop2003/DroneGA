@@ -160,10 +160,10 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	int id2=1;
 	for(int i=0;i<T.size();i++){
 		//dieu kien drone co den lay mau tai customer
+		Tcome[i]=T[i].timetechnitian;
 		if(T[i].timedrone!=0){
 			
 			//dieu kien Technitian den customer sau drone thi drone se phai + them thoi gian doi
-			Tcome[i]=T[i].timetechnitian;
 			if(T[i].timetechnitian>T[i].timedrone){
 				float t=T[i].timetechnitian-T[i].timedrone;
 				T[i].timedrone=T[i].timetechnitian; 
