@@ -81,7 +81,10 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	vector<int> Dlab1;				//vector luu cac customer duoc drone 1 mang mau ve
 	vector<int> Dlab2;				//vector luu cac customer duoc drone 2 mang mau ve
 	vector<float>Tf;				//vector luu cac thoi diem ve cua cac Technitian
-	int checkstart[100];                // check xem diem truoc diem i co phai la drone bat dau di ko
+	float Tcome[100];
+	for(int i=0;i<100;i++){
+		Tcome[i]=-1;
+	}
 	for(int i=1;i<NSTD.size();i=i+2){
 		if(NSTD[i]==1&&NSTD[i-1]==0){
 			return -3;
@@ -160,6 +163,7 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 		if(T[i].timedrone!=0){
 			
 			//dieu kien Technitian den customer sau drone thi drone se phai + them thoi gian doi
+			Tcome[i]=T[i].timetechnitian;
 			if(T[i].timetechnitian>T[i].timedrone){
 				float t=T[i].timetechnitian-T[i].timedrone;
 				T[i].timedrone=T[i].timetechnitian; 
@@ -282,7 +286,7 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 			for(int j=x;j<i;j++){
 				for(int k=0;k<T.size();k++){
 					if(NSTT[j]==T[k].customer){
-						fitness=fitness+Tf[lt]-T[k].timetechnitian;
+						fitness=fitness+Tf[lt]-Tcome[k];
 						break;
 					}
 				}
@@ -297,7 +301,7 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 				for(int jj=x;jj<=i;jj++){
 					for(int k=0;k<T.size();k++){
 						if(NSTT[jj]==T[k].customer){
-							fitness=fitness+Df1[j]-T[k].timetechnitian;
+							fitness=fitness+Df1[j]-Tcome[k];
 							break;
 						}
 					}
@@ -311,7 +315,7 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 				for(int jj=x;jj<=i;jj++){
 					for(int k=0;k<T.size();k++){
 						if(NSTT[jj]==T[k].customer){
-							fitness=fitness+Df2[j]-T[k].timetechnitian;
+							fitness=fitness+Df2[j]-Tcome[k];
 							break;
 						}
 					}
@@ -327,6 +331,6 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 
 int main(){
 	input();
-	float x=findFitness({6,1,8,7,2,3,4,5},{2,0,1,0,2,1,2,0,1,1,2,1});
+	float x=findFitness({2, 5, 8, 6, 7, 4, 3, 1 },{1, 0, 1, 0, 2, 1, 2, 1, 2, 1, 1, 1, });
 	cout<<x<<endl;
 }
