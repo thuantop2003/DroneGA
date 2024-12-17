@@ -78,8 +78,11 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	vector<float> Df1;				//vector luu thoi diem cac lan ve cua drone 1
 	vector<float> Ds2;				//vector luu thoi diem cac lan xuat phat cua drone 2
 	vector<float> Df2;				//vector luu thoi diem cac lan ve cua drone 2
+	vector<float> Ds3;				//vector luu thoi diem cac lan xuat phat cua drone 3
+	vector<float> Df3;				//vector luu thoi diem cac lan ve cua drone 3
 	vector<int> Dlab1;				//vector luu cac customer duoc drone 1 mang mau ve
 	vector<int> Dlab2;				//vector luu cac customer duoc drone 2 mang mau ve
+	vector<int> Dlab3;				//vector luu cac customer duoc drone 2 mang mau ve
 	vector<float>Tf;				//vector luu cac thoi diem ve cua cac Technitian
 	float Tcome[100];
 	for(int i=0;i<100;i++){
@@ -94,6 +97,7 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	//ban dau coi nhu cac drone deu xuat phat tai thoi diem 0
 	Ds1.push_back(0);
 	Ds2.push_back(0);
+	Ds3.push_back(0);
 	
 	
 	//Khoi tao thoi diem den cac customer cua Technitian dua vao NST cua Techinitian
@@ -123,8 +127,10 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	//Khoi tao thoi diem den cac customer cua Drone dua vao NST cua Drone
 	int past1=0;
 	int past2=0;
+	int past3=0;
 	float td1=0;
 	float td2=0;
+	float td3=0;
 	for(int i=0;i<NSTD.size();i=i+2){
 		if(NSTD[i]==1){
 			td1=td1+distance(d[T[i/2].customer],d[past1])/vd;
@@ -150,36 +156,65 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 				Dlab2.push_back(T[i/2].customer);
 			}
 		}
+		else if(NSTD[i]==3){
+			td3=td3+distance(d[T[i/2].customer],d[past3])/vd;
+			T[i/2].timedrone=td3;
+			past3=T[i/2].customer;
+			if(NSTD[i+1]==1){
+				td3=td3+distance(d[T[i/2].customer],d[0])/vd;
+				past3=0;
+				Ds3.push_back(td3);
+				Df3.push_back(td3);
+				Dlab3.push_back(T[i/2].customer);
+			}
+		}
 		else{
 			T[i/2].timedrone=0;
 		}
 	}
 	//Cap nhat thoi diem chinh xac den cac customer cua Drone va Technitian
-	int is1=0,is2=0;
+	int is1=0,is2=0,is3=0;
 	int id1=1;
 	int id2=1;
+	int id3=1;
 	for(int i=0;i<T.size();i++){
 		//dieu kien drone co den lay mau tai customer
 		Tcome[i]=T[i].timetechnitian;
-		if(T[i].timedrone!=0){
-			
+		cout<<NSTD[i*2]<<endl;
+		if(NSTD[i*2]!=0){
 			//dieu kien Technitian den customer sau drone thi drone se phai + them thoi gian doi
 			if(T[i].timetechnitian>T[i].timedrone){
 				float t=T[i].timetechnitian-T[i].timedrone;
 				T[i].timedrone=T[i].timetechnitian; 
 				//Neu diem truoc do la diem xuat phat cua drone thi drone chi can xuat phat muon hon
 				if(id1==1&&NSTD[i*2]==1){
-					for(int j=is1;j<Ds1.size();j++){
+					for(int j=is1;j<Dlab1.size();j++){
 						Df1[j]=Df1[j]+t;
 						Ds1[j]=Ds1[j]+t;
-						id1=0;
+					}
+					id1=0;
+					if(NSTD[i*2+1]==1){
+						id1=1;
 					}
 				}
 				else if(id2==1&&NSTD[i*2]==2){
-					for(int j=is2;j<Ds2.size();j++){
+					for(int j=is2;j<Dlab2.size();j++){
 						Df2[j]=Df2[j]+t;
 						Ds2[j]=Ds2[j]+t;
-						id2=0;
+					}
+					id2=0;
+					if(NSTD[i*2+1]==1){
+						id2=1;
+					}
+				}
+				else if(id3==1&&NSTD[i*2]==3){
+					for(int j=is3;j<Dlab3.size();j++){
+						Df3[j]=Df3[j]+t;
+						Ds3[j]=Ds3[j]+t;
+					}
+					id3=0;
+					if(NSTD[i*2+1]==1){
+						id3=1;
 					}
 				}
 				//neu khong ta phai cap nhat cac gia tri T[i].timedrone, cac vector Ds1,Ds2,Df1,Df2
@@ -211,6 +246,17 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 							id2=1;is2++;
 						}
 					}
+					else if(NSTD[2*i]==3){
+						id3=0;
+						Df3[is3]=Df3[is3]+t;
+						for(int k=is3+1;k<Ds3.size();k++){
+							Ds3[k]=Ds3[k]+t;
+							Df3[k]=Df3[k]+t;
+						}
+						if(NSTD[2*i]==1){
+							id3=1;is3++;
+						}
+					}
 				}
 			}
 			//neu nhu drone den sau Technitian thi Technitian se phai doi Drone
@@ -227,6 +273,13 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 					if(NSTD[2*i+1]==1){
 						id2=1;
 						is2++;
+					}
+				}
+				if(NSTD[2*i]==3){
+					id3=0;
+					if(NSTD[2*i+1]==1){
+						id3=1;
+						is3++;
 					}
 				}
 				float t=-T[i].timetechnitian+T[i].timedrone;
@@ -251,6 +304,8 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 		}
 	}
 	//check dieu kien tong thoi gian di cua Technitian
+	int pt=0;
+	float ptt=0;
 	for(int i=0;i<NSTT.size()+1;i++){
 		if(NSTT[i]>n||i==NSTT.size()){
 			for(int j=0;j<T.size();j++){
@@ -258,18 +313,25 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 					float tt=T[j].timetechnitian+distance(d[NSTT[i-1]],d[0])/vt;
 					Tf.push_back(tt);
 					if(tt>TL){
-						return -1;
+						pt=1;
+						if(tt-TL>pt){
+							ptt=tt-TL;
+						}
 					}
 					break;
 				}
 			}
 		}	
 	}
-	
+	int pr=0;
+	float prr=0;
 	//check dieu kien thoi gian bay cua drone
 	for(int i=0;i<Df1.size();i++){
 		if(Df1[i]-Ds1[i]>DL){
-			return -2;
+			pr=1;
+			if(Df1[i]-Ds1[i]-DL>prr){
+				prr=Df1[i]-Ds1[i]-DL;
+			}
 		}
 	}
 	for(int i=0;i<Df2.size();i++){
@@ -324,6 +386,26 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 				break;
 			}
 		}
+		for(int j=0;j<Dlab3.size();j++){
+			if(NSTT[i]==Dlab3[j]){
+				for(int jj=x;jj<=i;jj++){
+					for(int k=0;k<T.size();k++){
+						if(NSTT[jj]==T[k].customer){
+							fitness=fitness+Df3[j]-Tcome[k];
+							break;
+						}
+					}
+				}	
+				x=i+1;
+				break;
+			}
+		}
+	}
+	if(pt==1){
+		fitness=fitness*(1+ptt/TL);
+	}
+	if(pr==1){
+		fitness=fitness*(1+prr/DL);
 	}
 	return fitness;
 }
@@ -331,6 +413,6 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 
 int main(){
 	input();
-	float x=findFitness({2, 5, 8, 6, 7, 4, 3, 1 },{1, 0, 1, 0, 2, 1, 2, 1, 2, 1, 1, 1, });
+	float x=findFitness({2, 5, 8, 6, 7, 4, 3, 1 },{1, 0, 1, 0, 2, 1, 2, 1, 2, 1, 3, 1 });
 	cout<<x<<endl;
 }
