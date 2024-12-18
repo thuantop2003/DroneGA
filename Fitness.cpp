@@ -72,8 +72,7 @@ int findElementIndex(const vector<int>& vec, int element) {
 
 
 //Ham tinh fitness va check
-float findFitness(vector<int> NSTT, vector<int> NSTD){
-	vector<TimeCustomer> T; 		//vector luu thu tu den cac customer cua cac technitian va drone va thoi diem den diem do
+vector<TimeCustomer> T; 		//vector luu thu tu den cac customer cua cac technitian va drone va thoi diem den diem do
 	vector<float> Ds1;				//vector luu thoi diem cac lan xuat phat cua drone 1
 	vector<float> Df1;				//vector luu thoi diem cac lan ve cua drone 1
 	vector<float> Ds2;				//vector luu thoi diem cac lan xuat phat cua drone 2
@@ -85,6 +84,8 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	vector<int> Dlab3;				//vector luu cac customer duoc drone 2 mang mau ve
 	vector<float>Tf;				//vector luu cac thoi diem ve cua cac Technitian
 	float Tcome[100];
+float findFitness(vector<int> NSTT, vector<int> NSTD){
+
 	for(int i=0;i<100;i++){
 		Tcome[i]=-1;
 	}
@@ -406,12 +407,23 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	if(pr==1){
 		fitness=fitness*(1+0.8*prr/(DL+0.2));
 	}
+	T.clear(); 		
+	Ds1.clear();			
+	Df1.clear();			
+	Ds2.clear();			
+	Df2.clear();				
+	Ds3.clear();			
+	Df3.clear();			
+	Dlab1.clear();			
+	Dlab2.clear();				
+	Dlab3.clear();				
+	vector<float>Tf;			
 	return fitness;
 }
 
 
 int main(){
 	input();
-	float x=findFitness({2, 5, 8, 6, 7, 4, 3, 1 },{1, 0, 1, 0, 2, 1, 2, 1, 2, 1, 3, 1 });
+	float x=findFitness({1,2,3, 6,11, 5, 7, 8, 9, 12,10,4 },{1, 0, 1, 0, 2, 0, 2, 1, 2, 1, 3, 1,1,1,2,0,1,1,1,1 });
 	cout<<x<<endl;
 }
