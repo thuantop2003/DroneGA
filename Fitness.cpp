@@ -231,7 +231,7 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 							Ds1[k]=Ds1[k]+t;
 							Df1[k]=Df1[k]+t;
 						}
-						if(NSTD[2*i]==1){
+						if(NSTD[2*i+1]==1){
 							id1=1;is1++;
 						}
 					}
@@ -242,7 +242,7 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 							Ds2[k]=Ds2[k]+t;
 							Df2[k]=Df2[k]+t;
 						}
-						if(NSTD[2*i]==1){
+						if(NSTD[2*i+1]==1){
 							id2=1;is2++;
 						}
 					}
@@ -253,7 +253,7 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 							Ds3[k]=Ds3[k]+t;
 							Df3[k]=Df3[k]+t;
 						}
-						if(NSTD[2*i]==1){
+						if(NSTD[2*i+1]==1){
 							id3=1;is3++;
 						}
 					}
@@ -426,6 +426,6 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 
 int main(){
 	input();
-	float x=findFitness({8,7,2,3,4,10,12,1,11,6,9,5 },{2, 0, 1, 0, 1, 0, 2, 1, 1, 1, 2, 0,2,0,1,1,1,1,2,1 });
+	float x=findFitness({2,3,6,4,7,1,8,5 },{1,0,1,0,2,0,2,0,1,1,2,1 });
 	cout<<x<<endl;
 }
