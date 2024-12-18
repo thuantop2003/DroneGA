@@ -336,7 +336,10 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	}
 	for(int i=0;i<Df2.size();i++){
 		if(Df2[i]-Ds2[i]>DL){
-			return -2;
+			pr=1;
+			if(Df2[i]-Ds2[i]-DL>prr){
+				prr=Df2[i]-Ds2[i]-DL;
+			}
 		}
 	}
 	//tinh fitness
@@ -421,9 +424,8 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	return fitness;
 }
 
-
 int main(){
 	input();
-	float x=findFitness({1,2,3, 6,11, 5, 7, 8, 9, 12,10,4 },{1, 0, 1, 0, 2, 0, 2, 1, 2, 1, 3, 1,1,1,2,0,1,1,1,1 });
+	float x=findFitness({8,7,2,3,4,10,12,1,11,6,9,5 },{2, 0, 1, 0, 1, 0, 2, 1, 1, 1, 2, 0,2,0,1,1,1,1,2,1 });
 	cout<<x<<endl;
 }
