@@ -180,7 +180,6 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	for(int i=0;i<T.size();i++){
 		//dieu kien drone co den lay mau tai customer
 		Tcome[i]=T[i].timetechnitian;
-		cout<<NSTD[i*2]<<endl;
 		if(NSTD[i*2]!=0){
 			//dieu kien Technitian den customer sau drone thi drone se phai + them thoi gian doi
 			if(T[i].timetechnitian>T[i].timedrone){
@@ -402,10 +401,10 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 		}
 	}
 	if(pt==1){
-		fitness=fitness*(1+ptt/TL);
+		fitness=fitness*(1+0.8*ptt/(TL+0.2));
 	}
 	if(pr==1){
-		fitness=fitness*(1+prr/DL);
+		fitness=fitness*(1+0.8*prr/(DL+0.2));
 	}
 	return fitness;
 }
