@@ -44,7 +44,6 @@ void checkinput(){
 		cout<<d[i].first<<"   "<<d[i].second<<endl;
 	}
 }
-
 //Tinh fitness va check solution
 
 //Cau truc de luu thoi diem den 1 customer cua drone va techinitian
@@ -72,7 +71,8 @@ int findElementIndex(const vector<int>& vec, int element) {
 
 
 //Ham tinh fitness va check
-vector<TimeCustomer> T; 		//vector luu thu tu den cac customer cua cac technitian va drone va thoi diem den diem do
+float findFitness(vector<int> NSTT, vector<int> NSTD){
+	vector<TimeCustomer> T; 		//vector luu thu tu den cac customer cua cac technitian va drone va thoi diem den diem do
 	vector<float> Ds1;				//vector luu thoi diem cac lan xuat phat cua drone 1
 	vector<float> Df1;				//vector luu thoi diem cac lan ve cua drone 1
 	vector<float> Ds2;				//vector luu thoi diem cac lan xuat phat cua drone 2
@@ -84,8 +84,6 @@ vector<TimeCustomer> T; 		//vector luu thu tu den cac customer cua cac technitia
 	vector<int> Dlab3;				//vector luu cac customer duoc drone 2 mang mau ve
 	vector<float>Tf;				//vector luu cac thoi diem ve cua cac Technitian
 	float Tcome[100];
-float findFitness(vector<int> NSTT, vector<int> NSTD){
-
 	for(int i=0;i<100;i++){
 		Tcome[i]=-1;
 	}
@@ -423,9 +421,90 @@ float findFitness(vector<int> NSTT, vector<int> NSTD){
 	vector<float>Tf;			
 	return fitness;
 }
-
+void Decode(vector<int> NSTT, vector<int> NSTD){
+	cout<<"lo trinh di cua cac ky thuat vien:"<<endl;
+	for(int i=0;i<NSTT.size();i++){
+		if(NSTT[i]>n){
+			cout<<endl;
+		}
+		else{
+			cout<<NSTT[i]<<" ";
+		}
+	}
+	cout<<endl;
+	cout<<"lo trinh di cua cac drone:"<<endl;
+	vector<TimeCustomer> T;
+	float tt=0;
+	for(int i=0;i<NSTT.size();i++){
+		if(NSTT[i]>n){
+			continue;
+		}
+		else if(i==0||NSTT[i-1]>n){
+			tt=0;
+			TimeCustomer t;
+			t.customer=NSTT[i];
+			tt=tt+distance(d[NSTT[i]],d[0])/vt;
+			t.timetechnitian=tt;
+			T.push_back(t);
+		}
+		else{
+			TimeCustomer t;
+			t.customer=NSTT[i];
+			tt=tt+distance(d[NSTT[i]],d[NSTT[i-1]])/vt;
+			t.timetechnitian=tt;
+			T.push_back(t);
+		}			
+	}
+	// sap xep thoi gian den cac diem cua technitian
+	sort(T.begin(), T.end(), compareByTechnitianTime);
+	vector<int> dr1;
+	vector<int> dr2;
+	vector<int> dr3;
+	for(int i=0;i<NSTD.size();i=i+2){
+		if(NSTD[i]==1){
+			dr1.push_back(T[i/2].customer);
+			if(NSTD[i+1]==1){
+				dr1.push_back(0);
+			}
+		}
+		if(NSTD[i]==2){
+			dr2.push_back(T[i/2].customer);
+			if(NSTD[i+1]==1){
+				dr2.push_back(0);
+			}
+		}
+		if(NSTD[i]==3){
+			dr3.push_back(T[i/2].customer);
+			if(NSTD[i+1]==1){
+				dr3.push_back(0);
+			}
+		}
+	}
+	for(int i=0;i<dr1.size();i++){
+		if(i==0){
+			cout<<"dr1:";
+		}
+		cout<<dr1[i]<<" ";
+	}
+	cout<<endl;
+	for(int i=0;i<dr2.size();i++){
+		if(i==0){
+			cout<<"dr2:";
+		}
+		cout<<dr2[i]<<" ";
+	}
+	cout<<endl; 
+	for(int i=0;i<dr3.size();i++){
+		if(i==0){
+			cout<<"dr3:";
+		}
+		cout<<"dr3:"<<dr3[i]<<" ";
+	}
+	cout<<endl;
+}
 int main(){
 	input();
 	float x=findFitness({2,3,6,4,7,1,8,5 },{1,0,1,0,2,0,2,0,1,1,2,1 });
 	cout<<x<<endl;
+	Decode({2,3,6,4,7,1,8,5 },{1,0,1,0,2,0,2,0,1,1,2,1 });
 }
